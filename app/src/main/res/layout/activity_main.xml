@@ -19,7 +19,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/andrew"
                 android:layout_width="400dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -29,7 +29,7 @@
                 android:src="@drawable/test" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/talis"
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
