@@ -25,18 +25,17 @@ import android.widget.ImageButton;
         andrew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopPlayer();
                 play(v, R.raw.andrew_saying);
             }
         });
-
-
         tristan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopPlayer();
                 play(v,R.raw.talis);
             }
         });
-
     }
     public void play(View v, int nameMusic){
         if (player == null){
