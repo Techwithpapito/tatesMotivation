@@ -32,8 +32,8 @@ import java.util.ArrayList;
         //Setting the data source
 
 
-         DataSource.heroes.add(new Hero("Andrew",R.drawable.andrewpic,R.raw.andrew_saying));
-         DataSource.heroes.add(new Hero("Tristan",R.drawable.talismanpic,R.raw.talis));
+         DataSource.heroes.add(new Hero("Andrew",R.drawable.andrewpic,R.raw.andrew_saying,"https://thecitesite.com/authors/andrew-tate/"));
+         DataSource.heroes.add(new Hero("Tristan",R.drawable.talismanpic,R.raw.talis,"https://thecitesite.com/authors/tristan-tate/"));
 
          linearLayoutManager = new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL,false);
          myRvAdapter = new MyRvAdapter(DataSource.heroes);
