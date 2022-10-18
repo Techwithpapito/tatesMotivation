@@ -26,6 +26,10 @@ import java.util.ArrayList;
 public class HeroInfo extends AppCompatActivity {
     Hero heroe;
     ArrayList<String> heroQuotes = new ArrayList<String>();
+    ArrayList<String> moneyQuotes = new ArrayList<String>();
+    ArrayList<String> motivationQuotes = new ArrayList<String>();
+    ArrayList<String> dateQuotes = new ArrayList<String>();
+    ArrayList<String> depressionQuotes = new ArrayList<String>();
     ListView lista;
 
     @Override
@@ -38,14 +42,11 @@ public class HeroInfo extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         webScraper();
         int index = (int)(Math.random() * heroQuotes.size());
-        System.out.println(heroQuotes);
         lista = findViewById(R.id.quoteListView);
         TextView dayQuote = findViewById(R.id.dayQuote);
-        dayQuote.setText(heroQuotes.get(heroIndex));
+        dayQuote.setText(heroQuotes.get(index));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,heroQuotes);
         lista.setAdapter(adapter);
-
-
     }
     private void webScraper() {
         Thread t1 = new Thread(new Runnable() {
@@ -55,7 +56,11 @@ public class HeroInfo extends AppCompatActivity {
                     Document doc = Jsoup.connect(heroe.getUrl()).get();
                     Elements quotes = doc.select("p[itemprop]");
                     for (Element quote : quotes) {
-                        heroQuotes.add(quote.text());
+//                        heroQuotes.add(quote.text());
+                        addToArrayList(quote.text());
+
+
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -69,6 +74,17 @@ public class HeroInfo extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void addToArrayList(String quoteText) {
+        ArrayList<String> money = { "michael"},
+
+
+        if (quoteText.toLowerCase().indexOf(color_name.toLowerCase()) != -1) {
+            return color_cocktails.get(color_name);
+        }
+//        return color_cocktails.get("white");
+    }
+
 
 
 }

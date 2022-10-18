@@ -6,8 +6,6 @@ public class Hero {
     private Integer voice;
     private String url;
 
-
-
     public  Hero(String name, Integer picture, Integer voice, String url) {
         this.name = name;
         this.picture = picture;
