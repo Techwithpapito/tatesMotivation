@@ -16,8 +16,9 @@ import java.util.ArrayList;
 
 public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
 
-    private final ArrayList<Hero> heroesList;
+    public final ArrayList<Hero> heroesList;
     boolean visible;
+    MainActivity mainActivity;
 
     public MyRvAdapter(ArrayList<Hero> heroesList) {
         this.heroesList=heroesList;
@@ -28,15 +29,13 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item,parent,false);
         return new MyHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         holder.imageView.setImageResource(this.heroesList.get(position).getPicture());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-//                int id = holder.getAdapterPosition();
-//                String name = heroesList.get(id).getName();
                 TransitionManager.beginDelayedTransition(holder.buttonContainer);
                 visible = !visible;
                 holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +43,6 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
                     public void onClick(View v) {
                         visible = !visible;
                         holder.buttonContainer.setVisibility(visible? View.VISIBLE: View.GONE);
-
                     }
                 });
                 holder.chooseBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,12 +53,7 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
                         v.getContext().startActivity(intent);
                     }
                 });
-
-
-
-
                 holder.buttonContainer.setVisibility(visible? View.VISIBLE: View.GONE);
-
             }
         });
 
@@ -86,4 +79,5 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
             chooseBtn = itemView.findViewById(R.id.chooseBtn);
         }
     }
+
 }

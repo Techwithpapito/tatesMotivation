@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,22 +16,21 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HeroInfo extends AppCompatActivity {
     Hero heroe;
     ArrayList<String> heroQuotes = new ArrayList<String>();
-    ArrayList<String> moneyQuotes = new ArrayList<String>();
-    ArrayList<String> motivationQuotes = new ArrayList<String>();
-    ArrayList<String> dateQuotes = new ArrayList<String>();
-    ArrayList<String> depressionQuotes = new ArrayList<String>();
-    ListView lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +42,64 @@ public class HeroInfo extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         webScraper();
         int index = (int)(Math.random() * heroQuotes.size());
-        lista = findViewById(R.id.quoteListView);
         TextView dayQuote = findViewById(R.id.dayQuote);
         dayQuote.setText(heroQuotes.get(index));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,heroQuotes);
-        lista.setAdapter(adapter);
+
+
+        Button moneyBtn = (Button) findViewById(R.id.moneyBtn);
+        Button motivationBtn = (Button) findViewById(R.id.motivationBtn);
+        Button dateBtn = (Button) findViewById(R.id.womanBtn);
+        Button depressionBtn = (Button) findViewById(R.id.depressionBtn);
+        TextView chosenTextView = (TextView) findViewById(R.id.chosenTextView);
+
+        moneyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> moneyKeywords = Arrays.asList("money","success","rich","poverty","");
+                chosenTextView.setText(randomQuotePicker(moneyKeywords));
+            }
+        });
+        motivationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> motivationKeyword = Arrays.asList("important","hope","control","lucky","fantasy","freedom","resist"
+                ,"man","learn","happy","challenges","poverty","train","discipline","impossible");
+                chosenTextView.setText(randomQuotePicker(motivationKeyword));
+            }
+        });
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> dateKeyword = Arrays.asList("woman","date","girl","girls","wife");
+                chosenTextView.setText(randomQuotePicker(dateKeyword));
+            }
+        });
+        depressionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> depressionKeyword  = Arrays.asList("happy","motivation","losers","normal","sad","trauma","failure","");
+                chosenTextView.setText(randomQuotePicker(depressionKeyword));
+            }
+        });
+
     }
     private void webScraper() {
+        int pagesNumbers = 3;
+
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Document doc = Jsoup.connect(heroe.getUrl()).get();
-                    Elements quotes = doc.select("p[itemprop]");
-                    for (Element quote : quotes) {
-//                        heroQuotes.add(quote.text());
-                        addToArrayList(quote.text());
+                    for (int i = 1;i <=pagesNumbers; ++i){
+                        String url = String.format(heroe.getUrl()+i);
+                        Document doc = Jsoup.connect(url).get();
+                        Elements quotesContainer = doc.select("div[class=quotecontainer]");
 
-
-
+                        for (Element container : quotesContainer){
+                            if (container.select(String.format(":contains(%s)",heroe.getName())).size() > 0){
+                                heroQuotes.add(container.select("p[itemprop=text]").text());
+                            }
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -75,15 +114,30 @@ public class HeroInfo extends AppCompatActivity {
         }
     }
 
-    public void addToArrayList(String quoteText) {
-        ArrayList<String> money = { "michael"},
-
-
-        if (quoteText.toLowerCase().indexOf(color_name.toLowerCase()) != -1) {
-            return color_cocktails.get(color_name);
-        }
-//        return color_cocktails.get("white");
+ public String randomQuotePicker(List<String> keywords) {
+     Boolean finish = false;
+     int index = 0;
+     while(finish == false) {
+         index = (int) (Math.random() * heroQuotes.size());
+         System.out.println(keywords);
+         String regex = ".*(?:" + String.join("|", keywords) + ").*";
+         if (heroQuotes.get(index).matches(regex)){
+             return heroQuotes.get(index);
+         }
+     }
+    return heroQuotes.get(index);
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
