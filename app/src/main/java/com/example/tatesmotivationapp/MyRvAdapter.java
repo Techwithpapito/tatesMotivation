@@ -40,7 +40,6 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         Hero hero = heroesList.get(position);
-//        player = MediaPlayer.create(holder.itemView.getContext(),heroesList.get(position).getVoice());
         holder.imageView.setImageResource(this.heroesList.get(position).getPicture());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
