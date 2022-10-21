@@ -1,6 +1,8 @@
 package com.example.tatesmotivationapp;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import javax.crypto.ShortBufferException;
+
 public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
 
-    public final ArrayList<Hero> heroesList;
+    private final ArrayList<Hero> heroesList;
     boolean visible;
     MainActivity mainActivity;
+    MediaPlayer player;
+
+
+
 
     public MyRvAdapter(ArrayList<Hero> heroesList) {
         this.heroesList=heroesList;
@@ -31,16 +39,22 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
     }
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+        Hero hero = heroesList.get(position);
+//        player = MediaPlayer.create(holder.itemView.getContext(),heroesList.get(position).getVoice());
         holder.imageView.setImageResource(this.heroesList.get(position).getPicture());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                stopPlayer();
+                play(holder);
                 TransitionManager.beginDelayedTransition(holder.buttonContainer);
                 visible = !visible;
                 holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        stopPlayer();
                         visible = !visible;
                         holder.buttonContainer.setVisibility(visible? View.VISIBLE: View.GONE);
                     }
@@ -48,6 +62,7 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
                 holder.chooseBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        stopPlayer();
                         Intent intent = new Intent(v.getContext(), HeroInfo.class);
                         intent.putExtra("index",holder.getAdapterPosition());
                         v.getContext().startActivity(intent);
@@ -58,6 +73,27 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyHolder>{
         });
 
 
+    }
+
+    public void play(MyHolder holder){
+        if (player == null){
+            player= MediaPlayer.create(holder.itemView.getContext(), heroesList.get(holder.getAdapterPosition()).getVoice());
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+        player.start();
+    }
+
+
+    private void stopPlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
 
     @Override
